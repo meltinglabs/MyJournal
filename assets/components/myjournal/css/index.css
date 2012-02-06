@@ -1,0 +1,110 @@
+/* MAY HAVE TO MOVE THIS ON MAIN THEME DEF */
+.ext-strict .x-form-field-trigger-wrap .x-form-text, 
+.ext-strict .x-small-editor .x-form-field-trigger-wrap .x-form-text {
+	font: 14px 'Cuprum',sans-serif;
+	text-shadow: none;
+}
+
+.myjournal a{
+	text-decoration: none;
+}
+.myjournal .vertical-tabs-panel{
+	border: 1px solid #E0E0E0;
+}
+.myjournal #modx-tv-tabs {
+    width: auto !important;
+}
+
+/* MAY HAVE TO MOVE THIS ON MAIN THEME DEF - Main column */
+.myjournal .x-column {
+	margin: 0 20px 0 0;
+}
+
+.myjournal .aside {
+    background-color: #FDFDFD;
+    border: 1px solid #E0E0E0;
+    margin-right: 0;
+}
+.myjournal .aside-block-wrapper {
+    border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #E0E0E0;
+	color: #666666;
+    margin-left: 1px;
+    padding: 15px;	
+}
+.myjournal .aside-block-wrapper.darker {
+    background-color: #F3F3F3;
+}
+.myjournal .aside-block-wrapper:last-child { border-bottom: 0 none; }
+
+.myjournal  .box-title {
+	color: #444444;
+    font: 16px 'Cuprum',sans-serif;
+    text-shadow: 0 1px 0 #FFFFFF;
+	margin-bottom:12px;
+}
+
+.myjournal  .x-grid3-col-date {
+    line-height: 1;
+    padding: 15px 0 0;
+}
+.myjournal  .x-grid3-col-author {
+    color: #A0A0A0;
+}
+.myjournal  .x-grid3-col-main a {
+    color: #485319;
+}
+.myjournal  .x-grid3-col-main a:hover {
+    color: #7A8F23;
+}
+
+.myjournal .day_month {
+    color: #A0A0A0;
+    font-family: arial,Helvetica,sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 1;
+    padding-right: 10px;
+    text-align: right;
+	white-space: normal;
+}
+
+.myjournal .day_month .hour {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    margin-top: 5px;
+}
+
+.myjournal .icon-view{ background: url("../images/view-off.png") no-repeat scroll 5px 5px transparent !important; }
+.myjournal .icon-add { background: url("../images/add.png") no-repeat scroll 5px 4px transparent !important; }
+
+/* TPLs */
+.myjournal .empty-category-message{
+	font-size: 13px;
+	color: #C34550;
+}
+.myjournal button.inline-btn{
+	background-color: transparent;
+    border: 0 none;
+    color: #225985;
+    font: 12px Helvetica,Tahoma,Arial,Helvetica,sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.myjournal button.inline-btn:hover{
+}
+
+/* buttons */
+.myjournal .save-btns .x-toolbar-left table:first-child{
+	margin: 0 auto;
+}
+.myjournal .save-btns .x-toolbar {
+	background-color: transparent;
+	border-style: none solid;
+    border-width: 0 1px;
+    border-color: transparent #D5D5D5;
+    margin: 0;
+    padding: 12px 20px 14px;
+}
