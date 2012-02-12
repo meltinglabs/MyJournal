@@ -4,16 +4,30 @@
 	font: 14px 'Cuprum',sans-serif;
 	text-shadow: none;
 }
-
 .myjournal a{
 	text-decoration: none;
 }
 .myjournal .vertical-tabs-panel{
 	border: 1px solid #E0E0E0;
 }
+.myjournal .vertical-tabs-body {
+    padding: 20px 25px;
+}
 .myjournal #modx-tv-tabs {
     width: auto !important;
 }
+.myjournal .vertical-tabs-panel .radios-and-checkboxes .desc-under{
+	font: italic 11px Arial,Helvetica,sans-serif;
+    margin: 1px 0 0;
+    position: absolute;
+}
+.myjournal .vertical-tabs-panel .radios-and-checkboxes { margin-bottom: 8px; }
+.myjournal .vertical-tabs-panel .radios-and-checkboxes .x-form-item,
+.myjournal .vertical-tabs-panel .radios-and-checkboxes .x-hide-label{ 
+	margin-bottom: 0; 
+	padding-bottom: 0; 
+}
+.myjournal .vertical-tabs-panel .radios-and-checkboxes .with-desc { margin-top: 16px; }
 
 /* MAY HAVE TO MOVE THIS ON MAIN THEME DEF - Main column */
 .myjournal .x-column {

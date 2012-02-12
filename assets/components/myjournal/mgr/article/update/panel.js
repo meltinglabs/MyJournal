@@ -73,7 +73,8 @@ Ext.extend(MyJournal.panel,MODx.Panel,{
 	}
 
 	,toggleRTE: function(){
-		jQuery("#content").markItUp(mySettings);
+		// jQuery("#content").markItUp(mySettings);
+		jQuery(".richtext").markItUp(mySettings);
 	}
 });
 Ext.reg('myjournal-main-panel',MyJournal.panel);

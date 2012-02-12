@@ -225,7 +225,7 @@ Ext.extend(MyJournal.ContainerPanelResource, Ext.form.FormPanel,{
 				,hideLabel: true
 				,name: 'cacheable'
 				,id: 'modx-resource-cacheable'
-				,hidden: true
+				// ,hidden: true
 				,inputValue: 1
 				,checked: parseInt(MyJournal.record.cacheable)
 			},{

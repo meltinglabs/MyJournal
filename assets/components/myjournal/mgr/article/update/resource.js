@@ -45,11 +45,12 @@ Ext.extend(MyJournal.ContainerPanelResource, Ext.form.FormPanel,{
 		this._addSidebarDocumentFields();
 		this._addSidebarSettingsFields();
 		// this._addPrivacyField();
+		this._addTVs();
 	}
 	
 	//Move the TV panel after render
 	,_init: function(){
-		this._addTVs();
+		// this._addTVs();
 	}
 	
 	,_addResourceFields: function(){
@@ -133,19 +134,6 @@ Ext.extend(MyJournal.ContainerPanelResource, Ext.form.FormPanel,{
 			}]
 		});
 	}
-	
-	,_addTVs: function() {
-        Ext.getCmp('myjournal-container-main-column').add({
-            xtype: 'modx-panel-resource-tv'
-            ,collapsed: false
-			,cls: 'tvs-wrapper'
-            ,resource: ''
-			,defaults: { unstyled: true }
-            ,class_key: 'MyJournalContainer'
-            ,template: 1
-            ,unstyled: true
-        });
-    }
 	
 	,_addSidebarDocumentFields: function(){
 		Ext.getCmp('myjournal-container-sidebar').add({
@@ -368,6 +356,128 @@ Ext.extend(MyJournal.ContainerPanelResource, Ext.form.FormPanel,{
 			});
 	}
 	
+	,_addTVs: function() {		
+		var categories = [];
+		
+		Ext.iterate(MyJournal.tvs, function(catname, tvs){
+			var category = this.getTabDesc(catname);
+			var tabs = [];
+			Ext.each(tvs, function(tv){		
+				tv.type = this.convertTvType(tv.type);
+				if(Ext.ComponentMgr.isRegistered(tv.type)){
+					/* Add the tv field if the xtype is registered */
+					tabs = this.getTVFormField(tv, tabs);
+				} else {
+					// console.log(tv);
+				}
+			}, this);
+			
+			if(tabs.length > 0){
+				category.items = tabs;
+				categories.push(category);
+			}			
+		}, this);
+		
+		if(categories.length > 0){
+			Ext.getCmp('myjournal-container-main-column').add({
+				xtype: 'panel'	
+				,id: 'modx-main-resource-tv'
+				,layout: 'form'	
+				,items:[{
+					xtype: 'myjournal-vtabs'					
+					,items: [categories]
+				},{
+					xtype: 'hidden'
+					,name: 'tvs'
+					,value: 1
+				}]
+			});
+		}
+    }
+	
+	/*
+	 * Convert default tv type to valid xtype
+	 */
+	,convertTvType: function(type){
+		switch(type){
+			case 'richtext': type = 'textarea'; break;
+			case 'email': type = 'textfield'; break;
+			case 'text': type = 'textfield'; break;
+			case 'option': type = 'myjournal-radios'; break;
+			case 'checkbox': type = 'myjournal-checkboxes'; break;
+			default: break;
+		}
+		return type;
+	}
+	
+	/*
+	 * Create the TV tab container
+	 */
+	,getTabDesc: function(name){
+		return {
+			title: name
+			,labelAlign: 'top'
+			,defaults: { anchor : '100%' }
+			,items: []
+		}
+	}
+	
+	/*
+	 * Create the TV form field
+	 */
+	,getTVFormField: function(tv, tabs){
+		switch(tv.type){
+			case 'myjournal-radios':
+			case 'myjournal-checkboxes':
+				tabs.push({
+					xtype: tv.type
+					,tv: tv	
+					,id: 'tv-container-'+tv.id
+				});	
+			break;
+			case 'textarea':
+			case 'textfield':
+				// Render the following input type [textfield, textarea, email, richtext] and soon [url, Hidden]
+				tabs.push({
+					xtype: tv.type
+					,fieldLabel : tv.caption
+					,name: 'tv'+tv.id
+					,id: 'tv'+tv.id
+					,value: tv.value || tv.default_text || ''
+					,tv: tv
+					,vtype: tv.vtype || null
+					,cls: tv.cls || ''
+					,height: tv.height || undefined
+					,listeners:{
+						afterrender: function(p){
+							if(p.tv.description != ""){
+								var idx = p.ownerCt.items.indexOf(p);
+								idx++;
+								p.ownerCt.insert(idx,{
+									xtype: 'label'
+									,forId: p.id
+									,cls: 'desc-under'
+									,html: p.tv.description
+								});
+							}
+						}
+						,scope: this
+					}
+				});	
+			break;
+			break;
+			default:
+				// Render the following input type [textfield, textarea, email, richtext] and soon [url, Hidden]
+				tabs.push({
+					xtype: tv.type
+					,value: tv.value || tv.default_text || ''
+					,tv: tv
+				});	
+			break;
+		}		
+		return tabs;
+	}
+	
 	,onPanelAdded: function(p, cmp){
 		if(cmp.id == "modx-panel-resource-tv" && cmp.rendered){
 			Ext.getCmp('myjournal-main-panel').setup();
@@ -376,6 +486,7 @@ Ext.extend(MyJournal.ContainerPanelResource, Ext.form.FormPanel,{
 	
 	,onCheckIfRTE: function(me){
 		if(me.getValue()){
+			Ext.getCmp('content').addClass('richtext');
 			Ext.getCmp('myjournal-main-panel').toggleRTE();
 		}
 	}

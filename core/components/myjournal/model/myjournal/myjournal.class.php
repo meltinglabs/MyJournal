@@ -129,19 +129,80 @@ class MyJournal extends modResource {
         return $node;
     }
 	
-	/**
-     * Provide the name of this CRT.
+	 /**
+     * Override modResource::process to set some custom placeholders for the Resource when rendering it in the front-end.
      * {@inheritDoc}
      * @return string
      */
-	// public function getResourceTypeName() {
-		// $this->xpdo->lexicon->load('myjournal:default');
-        // return $this->xpdo->lexicon('myjournal.container');
-	// }
+    public function process() {
+		$this->setPostListingCall();
+		$this->_content = parent::process();
+		return $this->_content;
+	}
+	
+	public function setPostListingCall(){
+		$where = array('class_key' => 'MyArticle');
+		//@TODO : This will be the settings for myjournal later
+		$settings = array();
+		$articlesPlaceholder = $this->xpdo->getOption('articles_placeholder', $settings, 'articles');
+		
+		//@TODO allow user and/or template to override/add options with runSnippet
+		$options = array(
+			'elementClass' => 'modSnippet',
+			'element' => 'getArchives',
+			'makeArchive' => 0,
+			'cache' => 0,
+			'parents' => $this->get('id'),
+			'where' => $this->xpdo->toJSON($where),
+			'showHidden' => 1,
+			'includeContent' => 1,
+			'includeTVsList' => $this->xpdo->getOption('include_tvs_list', $settings, ''),
+			'processTVs' => $this->xpdo->getOption('process_tvs', $settings, 0),
+			'processTVsList' => $this->xpdo->getOption('process_tvs_list', $settings, ''),
+			'tagKey' => $this->xpdo->getOption('tag_tv_name', $settings, 'tags'),
+			'tagSearchType' => $this->xpdo->getOption('tag_tv_search_mode', $settings, 'contains'),
+			'sortby' => $this->xpdo->getOption('sortby', $settings, 'publishedon'),
+			'sortdir' => $this->xpdo->getOption('sortdir', $settings, 'DESC'),
+			'limit' => $this->xpdo->getOption('post_per_page', $settings, 10),
+			'pageLimit' => $this->xpdo->getOption('page_limit', $settings, 5),
+			'pageVarKey' => $this->xpdo->getOption('page_var_key', $settings, 'page'),
+			'pageNavVar' => $this->xpdo->getOption('page_nav_var', $settings, 'page.nav'),
+			'totalVar' => $this->xpdo->getOption('page_total_var', $settings, 'total'),
+			'offset' => $this->xpdo->getOption('page_offset', $settings, 0),
+			'tpl' => $this->xpdo->getOption('articles_tpl', $settings, 'myjournal/article.tpl'),
+		);
+		
+		if($this->xpdo->getOption('set_page_nav_placeholder', $settings, true)){
+			$this->xpdo->setPlaceholder('paging','[[!+page.nav:notempty=`
+				<div class="paging">
+				<ul class="pageList">
+				  [[!+page.nav]]
+				</ul>
+				</div>
+			`]]');
+		}
+		
+		$this->setTagCall('getPage', $articlesPlaceholder, false, $options);
+	}
+	
+	public function setTagCall($name, $placeholder, $cached = false, $options = array()){
+		$tags = ($cached) ? "[[": "[[!";
+		$tags .= $name."?";		
+		foreach($options as $key => $value){
+			$tags .= "\n    &{$key}=`{$value}`";
+		}	
+		$tags .= "\n]]";
+		/* Debugging tag call */
+		if($this->xpdo->getOption('myjournal.debug_tag_call', null, false)){
+			$debugTags = str_replace('[[','&#91;&#91;', $tags);
+			$debugTags = str_replace(']]','&#93;&#93;', $debugTags);
+			$this->xpdo->setPlaceholder('debug_tag_'.$placeholder, '<pre>'. $debugTags .'</pre>');
+		}
+		$this->xpdo->setPlaceholder($placeholder, $tags);
+	}
 	
 	public function getContent(array $options = array()) {
 		$content = parent::getContent($options);
-		$content .= '[[!myArticles]]';
 		return $content;
 	}
 }
