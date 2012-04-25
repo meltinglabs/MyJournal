@@ -27,8 +27,9 @@ class MyJournalUpdateManagerController extends ResourceUpdateManagerController {
         Ext.onReady(function() {            
             MyJournal.assets_url = "'.$myjournalAssetsUrl.'";
             MyJournal.connector_url = "'.$connectorUrl.'";
+            MyJournal.preview_url = "'.$this->previewUrl.'";
             MyJournal.resource_id = '.$this->resource->get('id').';
-            MyJournal.record = '.$this->modx->toJSON($this->resourceArray).';
+            MyJournal.record = '.$this->modx->toJSON($this->resourceArray).';            
             MODx.ctx = "'.$this->resource->get('context_key').'";
             MODx.add("myjournal-main-panel");             
         });</script>');        

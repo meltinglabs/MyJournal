@@ -28,12 +28,14 @@ class MyArticleUpdateManagerController extends ResourceUpdateManagerController {
         
         $this->addJavascript($myjournalAssetsUrl . 'mgr/core/formpanel.js');    
         $this->addJavascript($myjournalAssetsUrl . 'mgr/article/update/panel.js');  
+        $this->addJavascript($myjournalAssetsUrl . 'mgr/article/update/resource.js');  
         
         $this->addHtml('<script type="text/javascript"> 
         Ext.onReady(function() {            
             MyJournal.assets_url = "'.$myjournalAssetsUrl.'";
             MyJournal.connector_url = "'.$connectorUrl.'";
             MyJournal.resource_id = '.$this->resource->get('id').';
+            MyJournal.preview_url = "'.$this->previewUrl.'";
             MyJournal.record = '.$this->modx->toJSON($this->resourceArray).';
             MyJournal.tvs = '.$this->modx->toJSON($this->tvElements).';
             MODx.ctx = "'.$this->resource->get('context_key').'";

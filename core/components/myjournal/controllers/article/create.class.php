@@ -17,6 +17,7 @@ class MyArticleCreateManagerController extends ResourceCreateManagerController {
  
         $this->addJavascript($myjournalAssetsUrl . 'mgr/core/formpanel.js');    
         $this->addJavascript($myjournalAssetsUrl . 'mgr/article/create/panel.js');    
+        $this->addJavascript($myjournalAssetsUrl . 'mgr/article/create/resource.js');    
         
         $this->addHtml('<script type="text/javascript"> 
         Ext.onReady(function() {            

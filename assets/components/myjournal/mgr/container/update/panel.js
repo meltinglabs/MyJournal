@@ -1,5 +1,3 @@
-Ext.ns('MyJournal');
-
 /**
  * Loads the main panel for MyJournal CRC - Create.
  * 
@@ -19,77 +17,45 @@ MyJournal.panel = function(config) {
             html: '<h2>'+ MyJournal.record.pagetitle +'</h2>'
             ,border: false
             ,cls: 'modx-page-header'
+            ,id: 'modx-page-header'
         },MODx.getPageStructure([{
-			title: 'Container'
-			,tbarCfg:{
-				cls: 'save-btns'
-			}
-			,tbar:['->',{
-				xtype: 'button'
-				,text: 'View'
-				// ,handler: this.onPreview
-				// ,scope: this
-				,iconCls: 'icon-view'
-			},{
-				xtype: 'button'
-				,text: 'Save Changes'
-				,handler: this.onSaveResource
-				,scope: this
-			}]
-			,items:[{
-				xtype: 'myjournal-panel-resource'		
-				,id: 'modx-panel-resource'	
-			}]            			
-		}])]
+            title: 'Articles'
+            ,items:[{
+                xtype: 'myjournal-articles-list-grid'                
+            }]
+        },{
+            title: 'Container Page'
+            ,items: [{
+                xtype: 'myjournal-panel-resource'
+                ,tbarCfg:{ cls: 'main-tbar' }
+                ,bodyCssClass: 'main-wrapper with-tbar form-with-labels'
+            }]
+        }])]
     });
     MyJournal.panel.superclass.constructor.call(this,config);
-	// this.on('render', this.setup, this);
+    this._init();
 };
 Ext.extend(MyJournal.panel,MODx.Panel,{
-	setup: function(){
-		Ext.getCmp('myjournal-main-panel').getComponent('tabs').insert(0,{
-			title: 'Articles'
-			,tbarCfg:{
-				cls: 'save-btns'
-			}
-			,tbar:['->',{				
-				xtype: 'button'
-				,text: 'View'
-				// ,handler: this.onSaveResource
-				,scope: this
-				,iconCls: 'icon-view'
-			}]
-			,items:[{
-				xtype: 'myjournal-articles-list-panel'	
-				,id: 'myjournal-articles-list-panel'
-			}]			
-		});
-		Ext.getCmp('myjournal-main-panel').getComponent('tabs').setActiveTab(0);
-	}
-
-	,toggleRTE: function(){
-		jQuery("#content").markItUp(mySettings);
-	}
-	
-	
-	,onSaveResource: function(){
-		var form = Ext.getCmp('modx-panel-resource').getForm();
-		if(form.isValid()){
-			form.submit({
-				url: MODx.config.connectors_url+'resource/index.php'
-				,method: 'POST'
-				,params: { action: 'update' }
-				,waitMsg: 'Saving, please wait...'
-				,success: function(f, action){					
-					// this.disable();
-				}
-				,failure: function(form, action){
-					/* Push it above the form */
-					// console.log(action.result.message)
-				}
-				,scope: this
-			});
-		}	
-	}
+    _init: function(){
+        me = this;
+        this.actionToolbar = new Ext.Toolbar({
+            renderTo: "modAB"
+            ,id: 'modx-action-buttons'
+            ,defaults: { scope: me }
+            ,cls: 'myjournal'
+            ,items: [{
+                text: 'View Page'
+                ,xtype: 'button'
+                ,iconCls: 'icon-view'
+                ,handler: this.view
+            }]
+        });                                
+        this.actionToolbar.doLayout();
+    }
+    
+    ,view: function(btn, e){
+        window.open(MyJournal.preview_url);
+        return false;
+    }
 });
 Ext.reg('myjournal-main-panel',MyJournal.panel);

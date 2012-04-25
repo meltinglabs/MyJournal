@@ -10,6 +10,9 @@ class MyJournalCreateManagerController extends ResourceCreateManagerController {
         $myjournalAssetsUrl = $this->modx->getOption('myjournal.assets_url',null,$this->modx->getOption('assets_url',null,MODX_ASSETS_URL).'components/myjournal/');
         $connectorUrl = $myjournalAssetsUrl.'connector.php';
         
+        $this->addJavascript($myjournalAssetsUrl . 'mgr/core/formpanel.js');    
+        $this->addJavascript($myjournalAssetsUrl . 'mgr/container/create/panel.js');    
+        
         $this->addHtml('<script type="text/javascript"> 
         Ext.onReady(function() {            
             MyJournal.assets_url = "'.$myjournalAssetsUrl.'";
