@@ -26,22 +26,22 @@ require_once MODX_CORE_PATH.'model/modx/processors/resource/update.class.php';
 class MyArticle extends modResource {
     /** @var modX $xpdo */
     public $xpdo;
-	public $allowListingInClassKeyDropdown = false;
+    public $allowListingInClassKeyDropdown = false;
     public $showInContextMenu = false;
-	
-	/**
+    
+    /**
      * Override modResource::__construct to ensure a few specific fields are forced to be set.
      * @param xPDO $xpdo
      */
-	function __construct(xPDO & $xpdo) {
+    function __construct(xPDO & $xpdo) {
         parent :: __construct($xpdo);
         $this->set('class_key','MyArticle');
-		$this->set('show_in_tree',false);
+        $this->set('show_in_tree',false);
         $this->set('richtext',true);
         $this->set('searchable',true);
     }
-	
-	/**
+    
+    /**
      * Get the controller path for our Articles type.
      * 
      * {@inheritDoc}
@@ -49,11 +49,11 @@ class MyArticle extends modResource {
      * @param xPDO $modx
      * @return string
      */
-	public static function getControllerPath(xPDO &$modx) {
-		return $modx->getOption('myjournal.core_path',null,$modx->getOption('core_path').'components/myjournal/').'controllers/article/';
-	}
-	
-	/**
+    public static function getControllerPath(xPDO &$modx) {
+        return $modx->getOption('myjournal.core_path',null,$modx->getOption('core_path').'components/myjournal/').'controllers/article/';
+    }
+    
+    /**
      * Provide the name of this CRT.
      * {@inheritDoc}
      * @return string
@@ -64,10 +64,10 @@ class MyArticle extends modResource {
 }
 
 class MyArticleCreateProcessor extends modResourceCreateProcessor {
-	/** @var MyArticle $object */
+    /** @var MyArticle $object */
     public $object;
-	
-	/**
+    
+    /**
      * Clears the container cache to ensure that the container listing is updated
      * @return void
      */
@@ -79,12 +79,67 @@ class MyArticleCreateProcessor extends modResourceCreateProcessor {
             'resource' => array('contexts' => array($this->object->get('context_key'))),
         ));
     }
+    
+    /**
+     * Save the Resource Groups on the object
+     * 
+     * @return void
+     */
+    public function saveResourceGroups() {
+        $attributted = array();
+        $groups = $this->modx->getCollection('modResourceGroupResource', array( 'document' => $this->object->get('id') ));
+        if($groups){
+            foreach($groups as $group){
+                $attributted[] = $group->get('id');
+            }
+        }
+        $nbAttributted = count($attributted);
+        $resourceGroups = $this->getProperty('resource_groups', array());
+        $nbResourceGroups = count($resourceGroups);        
+        if($nbResourceGroups > 0){
+            /* assigning to group */
+            foreach($resourceGroups as $id){
+                if(!in_array($id, $attributted)){
+                    $resourceGroupResource = $this->modx->newObject('modResourceGroupResource');
+                    $resourceGroupResource->set('document_group',$id);
+                    $resourceGroupResource->set('document',$this->object->get('id'));
+                    if ($resourceGroupResource->save()) {
+                        $this->modx->invokeEvent('OnResourceAddToResourceGroup',array(
+                            'mode' => 'resource-update',
+                            'resource' => &$this->object,
+                            'resourceGroup' => &$resourceGroup,
+                        ));
+                    }
+                }
+            }
+        }          
+        if($nbAttributted > 0){
+            /* if removing access to group */
+            foreach($attributted as $id){
+                if(!in_array($id, $resourceGroups)){
+                    $resourceGroupResource = $this->modx->getObject('modResourceGroupResource',array(
+                        'document_group' => $id,
+                        'document' => $this->object->get('id'),
+                    ));
+                    if ($resourceGroupResource && $resourceGroupResource instanceof modResourceGroupResource) {
+                        if ($resourceGroupResource->remove()) {
+                            $this->modx->invokeEvent('OnResourceRemoveFromResourceGroup',array(
+                                'mode' => 'resource-update',
+                                'resource' => &$this->object,
+                                'resourceGroup' => &$resourceGroup,
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 class MyArticleUpdateProcessor extends modResourceUpdateProcessor {
-	/** @var MyArticle $object */
+    /** @var MyArticle $object */
     public $object;
-	
-	/**
+    
+    /**
      * Clears the container cache to ensure that the container listing is updated
      * @return void
      */
@@ -95,5 +150,60 @@ class MyArticleUpdateProcessor extends modResourceUpdateProcessor {
             'context_settings' => array('contexts' => array($this->object->get('context_key'))),
             'resource' => array('contexts' => array($this->object->get('context_key'))),
         ));
+    }
+    
+    /**
+     * If specified, set the Resource Groups attached to the Resource
+     * @return mixed
+     */
+    public function setResourceGroups() {
+        $attributted = array();
+        $groups = $this->modx->getCollection('modResourceGroupResource', array( 'document' => $this->object->get('id') ));
+        if($groups){
+            foreach($groups as $group){
+                $attributted[] = $group->get('id');
+            }
+        }
+        $nbAttributted = count($attributted);
+        $resourceGroups = $this->getProperty('resource_groups', array());
+        $nbResourceGroups = count($resourceGroups);          
+        if($nbResourceGroups > 0){
+            /* assigning to group */
+            foreach($resourceGroups as $id){
+                if(!in_array($id, $attributted)){
+                    $resourceGroupResource = $this->modx->newObject('modResourceGroupResource');
+                    $resourceGroupResource->set('document_group',$id);
+                    $resourceGroupResource->set('document',$this->object->get('id'));
+                    if ($resourceGroupResource->save()) {
+                        $this->modx->invokeEvent('OnResourceAddToResourceGroup',array(
+                            'mode' => 'resource-update',
+                            'resource' => &$this->object,
+                            'resourceGroup' => &$resourceGroup,
+                        ));
+                    }
+                }
+            }
+        }          
+        if($nbAttributted > 0){
+            /* if removing access to group */
+            foreach($attributted as $id){
+                if(!in_array($id, $resourceGroups)){
+                    $resourceGroupResource = $this->modx->getObject('modResourceGroupResource',array(
+                        'document_group' => $id,
+                        'document' => $this->object->get('id'),
+                    ));
+                    if ($resourceGroupResource && $resourceGroupResource instanceof modResourceGroupResource) {
+                        if ($resourceGroupResource->remove()) {
+                            $this->modx->invokeEvent('OnResourceRemoveFromResourceGroup',array(
+                                'mode' => 'resource-update',
+                                'resource' => &$this->object,
+                                'resourceGroup' => &$resourceGroup,
+                            ));
+                        }
+                    }
+                }
+            }
+        }    
+        return $resourceGroups;
     }
 }

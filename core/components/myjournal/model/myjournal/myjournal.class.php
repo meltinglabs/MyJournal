@@ -27,22 +27,22 @@ require_once MODX_CORE_PATH.'model/modx/processors/resource/update.class.php';
  * @package myjournal
  */
 class MyJournal extends modResource {
-	/** @var modX $xpdo */
+    /** @var modX $xpdo */
     public $xpdo;
-	public $allowListingInClassKeyDropdown = false;
+    public $allowListingInClassKeyDropdown = false;
     public $showInContextMenu = true;
-	
-	/**
+    
+    /**
      * Override modResource::__construct to ensure a few specific fields are forced to be set.
      * @param xPDO $xpdo
      */
-	function __construct(xPDO & $xpdo) {
+    function __construct(xPDO & $xpdo) {
         parent :: __construct($xpdo);
         $this->set('class_key','MyJournal');
-		$this->set('hide_children_in_tree',true);
+        $this->set('hide_children_in_tree',true);
     }
-	
-	/**
+    
+    /**
      * Get the controller path for our Articles type.
      * 
      * {@inheritDoc}
@@ -50,11 +50,11 @@ class MyJournal extends modResource {
      * @param xPDO $modx
      * @return string
      */
-	public static function getControllerPath(xPDO &$modx) {
-		return $modx->getOption('myjournal.core_path',null,$modx->getOption('core_path').'components/myjournal/').'controllers/container/';
-	}
-	
-	/**
+    public static function getControllerPath(xPDO &$modx) {
+        return $modx->getOption('myjournal.core_path',null,$modx->getOption('core_path').'components/myjournal/').'controllers/container/';
+    }
+    
+    /**
      * Provide the name of this CRT.
      * {@inheritDoc}
      * @return string
@@ -62,20 +62,20 @@ class MyJournal extends modResource {
     public function getResourceTypeName() {
         return 'myjournal';
     }
-	
-	/**
+    
+    /**
      * Provide the custom context menu for Articles.
      * {@inheritDoc}
      * @return array
      */
-	public function getContextMenuText() {
-		return array(
-			'text_create' => 'Journal',
-			'text_create_here' => 'Create a Journal Here',
-		);
-	}
-	
-	
+    public function getContextMenuText() {
+        return array(
+            'text_create' => 'Journal',
+            'text_create_here' => 'Create a Journal Here',
+        );
+    }
+    
+    
     /**
      * @param array $node
      * @return array
@@ -128,89 +128,89 @@ class MyJournal extends modResource {
         $node['menu'] = array('items' => $menu);
         return $node;
     }
-	
-	 /**
+    
+     /**
      * Override modResource::process to set some custom placeholders for the Resource when rendering it in the front-end.
      * {@inheritDoc}
      * @return string
      */
     public function process() {
-		$this->setPostListingCall();
-		$this->_content = parent::process();
-		return $this->_content;
-	}
-	
-	public function setPostListingCall(){
-		$where = array('class_key' => 'MyArticle');
-		//@TODO : This will be the settings for myjournal later
-		$settings = array();
-		$articlesPlaceholder = $this->xpdo->getOption('articles_placeholder', $settings, 'articles');
-		
-		//@TODO allow user and/or template to override/add options with runSnippet
-		$options = array(
-			'elementClass' => 'modSnippet',
-			'element' => 'getArchives',
-			'makeArchive' => 0,
-			'cache' => 0,
-			'parents' => $this->get('id'),
-			'where' => $this->xpdo->toJSON($where),
-			'showHidden' => 1,
-			'includeContent' => 1,
-			'includeTVsList' => $this->xpdo->getOption('include_tvs_list', $settings, ''),
-			'processTVs' => $this->xpdo->getOption('process_tvs', $settings, 0),
-			'processTVsList' => $this->xpdo->getOption('process_tvs_list', $settings, ''),
-			'tagKey' => $this->xpdo->getOption('tag_tv_name', $settings, 'tags'),
-			'tagSearchType' => $this->xpdo->getOption('tag_tv_search_mode', $settings, 'contains'),
-			'sortby' => $this->xpdo->getOption('sortby', $settings, 'publishedon'),
-			'sortdir' => $this->xpdo->getOption('sortdir', $settings, 'DESC'),
-			'limit' => $this->xpdo->getOption('post_per_page', $settings, 10),
-			'pageLimit' => $this->xpdo->getOption('page_limit', $settings, 5),
-			'pageVarKey' => $this->xpdo->getOption('page_var_key', $settings, 'page'),
-			'pageNavVar' => $this->xpdo->getOption('page_nav_var', $settings, 'page.nav'),
-			'totalVar' => $this->xpdo->getOption('page_total_var', $settings, 'total'),
-			'offset' => $this->xpdo->getOption('page_offset', $settings, 0),
-			'tpl' => $this->xpdo->getOption('articles_tpl', $settings, 'myjournal/article.tpl'),
-		);
-		
-		if($this->xpdo->getOption('set_page_nav_placeholder', $settings, true)){
-			$this->xpdo->setPlaceholder('paging','[[!+page.nav:notempty=`
-				<div class="paging">
-				<ul class="pageList">
-				  [[!+page.nav]]
-				</ul>
-				</div>
-			`]]');
-		}
-		
-		$this->setTagCall('getPage', $articlesPlaceholder, false, $options);
-	}
-	
-	public function setTagCall($name, $placeholder, $cached = false, $options = array()){
-		$tags = ($cached) ? "[[": "[[!";
-		$tags .= $name."?";		
-		foreach($options as $key => $value){
-			$tags .= "\n    &{$key}=`{$value}`";
-		}	
-		$tags .= "\n]]";
-		/* Debugging tag call */
-		if($this->xpdo->getOption('myjournal.debug_tag_call', null, false)){
-			$debugTags = str_replace('[[','&#91;&#91;', $tags);
-			$debugTags = str_replace(']]','&#93;&#93;', $debugTags);
-			$this->xpdo->setPlaceholder('debug_tag_'.$placeholder, '<pre>'. $debugTags .'</pre>');
-		}
-		$this->xpdo->setPlaceholder($placeholder, $tags);
-	}
-	
-	public function getContent(array $options = array()) {
-		$content = parent::getContent($options);
-		return $content;
-	}
+        $this->setPostListingCall();
+        $this->_content = parent::process();
+        return $this->_content;
+    }
+    
+    public function setPostListingCall(){
+        $where = array('class_key' => 'MyArticle');
+        //@TODO : This will be the settings for myjournal later
+        $settings = array();
+        $articlesPlaceholder = $this->xpdo->getOption('articles_placeholder', $settings, 'articles');
+        
+        //@TODO allow user and/or template to override/add options with runSnippet
+        $options = array(
+            'elementClass' => 'modSnippet',
+            'element' => 'getArchives',
+            'makeArchive' => 0,
+            'cache' => 0,
+            'parents' => $this->get('id'),
+            'where' => $this->xpdo->toJSON($where),
+            'showHidden' => 1,
+            'includeContent' => 1,
+            'includeTVsList' => $this->xpdo->getOption('include_tvs_list', $settings, ''),
+            'processTVs' => $this->xpdo->getOption('process_tvs', $settings, 0),
+            'processTVsList' => $this->xpdo->getOption('process_tvs_list', $settings, ''),
+            'tagKey' => $this->xpdo->getOption('tag_tv_name', $settings, 'tags'),
+            'tagSearchType' => $this->xpdo->getOption('tag_tv_search_mode', $settings, 'contains'),
+            'sortby' => $this->xpdo->getOption('sortby', $settings, 'publishedon'),
+            'sortdir' => $this->xpdo->getOption('sortdir', $settings, 'DESC'),
+            'limit' => $this->xpdo->getOption('post_per_page', $settings, 10),
+            'pageLimit' => $this->xpdo->getOption('page_limit', $settings, 5),
+            'pageVarKey' => $this->xpdo->getOption('page_var_key', $settings, 'page'),
+            'pageNavVar' => $this->xpdo->getOption('page_nav_var', $settings, 'page.nav'),
+            'totalVar' => $this->xpdo->getOption('page_total_var', $settings, 'total'),
+            'offset' => $this->xpdo->getOption('page_offset', $settings, 0),
+            'tpl' => $this->xpdo->getOption('articles_tpl', $settings, 'myjournal/article.tpl'),
+        );
+        
+        if($this->xpdo->getOption('set_page_nav_placeholder', $settings, true)){
+            $this->xpdo->setPlaceholder('paging','[[!+page.nav:notempty=`
+                <div class="paging">
+                <ul class="pageList">
+                  [[!+page.nav]]
+                </ul>
+                </div>
+            `]]');
+        }
+        
+        $this->setTagCall('getPage', $articlesPlaceholder, false, $options);
+    }
+    
+    public function setTagCall($name, $placeholder, $cached = false, $options = array()){
+        $tags = ($cached) ? "[[": "[[!";
+        $tags .= $name."?";        
+        foreach($options as $key => $value){
+            $tags .= "\n    &{$key}=`{$value}`";
+        }    
+        $tags .= "\n]]";
+        /* Debugging tag call */
+        if($this->xpdo->getOption('myjournal.debug_tag_call', null, false)){
+            $debugTags = str_replace('[[','&#91;&#91;', $tags);
+            $debugTags = str_replace(']]','&#93;&#93;', $debugTags);
+            $this->xpdo->setPlaceholder('debug_tag_'.$placeholder, '<pre>'. $debugTags .'</pre>');
+        }
+        $this->xpdo->setPlaceholder($placeholder, $tags);
+    }
+    
+    public function getContent(array $options = array()) {
+        $content = parent::getContent($options);
+        return $content;
+    }
 }
 class MyJournalCreateProcessor extends modResourceCreateProcessor {
-	/** @var MyJournal $object */
+    /** @var MyJournal $object */
     public $object;
-	
-	/**
+    
+    /**
      * Override modResourceCreateProcessor::afterSave to provide custom functionality, saving the container settings to a
      * custom field in the manager
      * {@inheritDoc}
@@ -220,7 +220,7 @@ class MyJournalCreateProcessor extends modResourceCreateProcessor {
         $this->object->set('content','[[!MyJournal]]');
         $this->object->set('class_key','MyJournal');
         $this->object->set('richtext',false);
-		/* We need to set a compatible remark theme as soon as possible */
+        /* We need to set a compatible remark theme as soon as possible */
         $this->object->set('template',1);
         $this->object->set('cacheable',true);
         $this->object->set('isfolder',true);
@@ -228,17 +228,127 @@ class MyJournalCreateProcessor extends modResourceCreateProcessor {
         $this->object->set('deleted',false);
         return parent::beforeSave();
     }
-	
-	/**
+    
+    /**
      * Override modResourceCreateProcessor::afterSave to provide custom functionality
      * {@inheritDoc}
      * @return boolean
      */
     public function afterSave() {
-		return parent::afterSave();
+        return parent::afterSave();
+    }
+    
+    /**
+     * Save the Resource Groups on the object
+     * 
+     * @return void
+     */
+    public function saveResourceGroups() {
+        $attributted = array();
+        $groups = $this->modx->getCollection('modResourceGroupResource', array( 'document' => $this->object->get('id') ));
+        if($groups){
+            foreach($groups as $group){
+                $attributted[] = $group->get('id');
+            }
+        }
+        $nbAttributted = count($attributted);
+        $resourceGroups = $this->getProperty('resource_groups', array());
+        $nbResourceGroups = count($resourceGroups);        
+        if($nbResourceGroups > 0){
+            /* assigning to group */
+            foreach($resourceGroups as $id){
+                if(!in_array($id, $attributted)){
+                    $resourceGroupResource = $this->modx->newObject('modResourceGroupResource');
+                    $resourceGroupResource->set('document_group',$id);
+                    $resourceGroupResource->set('document',$this->object->get('id'));
+                    if ($resourceGroupResource->save()) {
+                        $this->modx->invokeEvent('OnResourceAddToResourceGroup',array(
+                            'mode' => 'resource-update',
+                            'resource' => &$this->object,
+                            'resourceGroup' => &$resourceGroup,
+                        ));
+                    }
+                }
+            }
+        }          
+        if($nbAttributted > 0){
+            /* if removing access to group */
+            foreach($attributted as $id){
+                if(!in_array($id, $resourceGroups)){
+                    $resourceGroupResource = $this->modx->getObject('modResourceGroupResource',array(
+                        'document_group' => $id,
+                        'document' => $this->object->get('id'),
+                    ));
+                    if ($resourceGroupResource && $resourceGroupResource instanceof modResourceGroupResource) {
+                        if ($resourceGroupResource->remove()) {
+                            $this->modx->invokeEvent('OnResourceRemoveFromResourceGroup',array(
+                                'mode' => 'resource-update',
+                                'resource' => &$this->object,
+                                'resourceGroup' => &$resourceGroup,
+                            ));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 class MyJournalUpdateProcessor extends modResourceUpdateProcessor {
-	/** @var MyJournal $object */
+    /** @var MyJournal $object */
     public $object;
+    
+    /**
+     * If specified, set the Resource Groups attached to the Resource
+     * @return mixed
+     */
+    public function setResourceGroups() {
+        $attributted = array();
+        $groups = $this->modx->getCollection('modResourceGroupResource', array( 'document' => $this->object->get('id') ));
+        if($groups){
+            foreach($groups as $group){
+                $attributted[] = $group->get('id');
+            }
+        }
+        $nbAttributted = count($attributted);
+        $resourceGroups = $this->getProperty('resource_groups', array());
+        $nbResourceGroups = count($resourceGroups);          
+        if($nbResourceGroups > 0){
+            /* assigning to group */
+            foreach($resourceGroups as $id){
+                if(!in_array($id, $attributted)){
+                    $resourceGroupResource = $this->modx->newObject('modResourceGroupResource');
+                    $resourceGroupResource->set('document_group',$id);
+                    $resourceGroupResource->set('document',$this->object->get('id'));
+                    if ($resourceGroupResource->save()) {
+                        $this->modx->invokeEvent('OnResourceAddToResourceGroup',array(
+                            'mode' => 'resource-update',
+                            'resource' => &$this->object,
+                            'resourceGroup' => &$resourceGroup,
+                        ));
+                    }
+                }
+            }
+        }          
+        if($nbAttributted > 0){
+            /* if removing access to group */
+            foreach($attributted as $id){
+                if(!in_array($id, $resourceGroups)){
+                    $resourceGroupResource = $this->modx->getObject('modResourceGroupResource',array(
+                        'document_group' => $id,
+                        'document' => $this->object->get('id'),
+                    ));
+                    if ($resourceGroupResource && $resourceGroupResource instanceof modResourceGroupResource) {
+                        if ($resourceGroupResource->remove()) {
+                            $this->modx->invokeEvent('OnResourceRemoveFromResourceGroup',array(
+                                'mode' => 'resource-update',
+                                'resource' => &$this->object,
+                                'resourceGroup' => &$resourceGroup,
+                            ));
+                        }
+                    }
+                }
+            }
+        }    
+        return $resourceGroups;
+    }
 }

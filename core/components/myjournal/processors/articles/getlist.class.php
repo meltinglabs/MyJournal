@@ -25,41 +25,41 @@
  */
 class ArticlesGetListProcessor extends modObjectGetListProcessor {
     public $classKey = 'MyArticle';
-	public $defaultSortField = 'createdon';
+    public $defaultSortField = 'createdon';
     public $defaultSortDirection = 'DESC';
     public $checkListPermission = false;
-	// public $objectType = 'myjournal';
-	public $languageTopics = array('resource','myjournal:default');
-	
-	 /**
+    // public $objectType = 'myjournal';
+    public $languageTopics = array('resource','myjournal:default');
+    
+     /**
      * @param xPDOObject|Article $object
      * @return array
      */
     public function prepareRow(xPDOObject $object) {
-		$resourceArray = parent::prepareRow($object);
-		return $resourceArray;
-	}
-	
-	public function prepareQueryBeforeCount(xPDOQuery $c) {
-		$c->leftJoin('modUser','CreatedBy');
-		$parent = $this->getProperty('parent',null);
+        $resourceArray = parent::prepareRow($object);
+        return $resourceArray;
+    }
+    
+    public function prepareQueryBeforeCount(xPDOQuery $c) {
+        $c->leftJoin('modUser','CreatedBy');
+        $parent = $this->getProperty('parent',null);
         if (!empty($parent)) {
             $c->where(array(
                 'parent' => $parent,
             ));
         }
-		$c->where(array(
+        $c->where(array(
             'class_key' => 'MyArticle',
         ));
         return $c;
-	}
-	
-	public function prepareQueryAfterCount(xPDOQuery $c) {
-		$c->select($this->modx->getSelectColumns('MyArticle','MyArticle'));
+    }
+    
+    public function prepareQueryAfterCount(xPDOQuery $c) {
+        $c->select($this->modx->getSelectColumns('MyArticle','MyArticle'));
         $c->select(array(
             'createdby_username' => 'CreatedBy.username',
         ));
-		return $c;
-	}
+        return $c;
+    }
 }
 return 'ArticlesGetListProcessor';
