@@ -1,37 +1,94 @@
 /* MAY HAVE TO MOVE THIS ON MAIN THEME DEF */
 .ext-strict .x-form-field-trigger-wrap .x-form-text, 
 .ext-strict .x-small-editor .x-form-field-trigger-wrap .x-form-text {
-	font: 14px 'Cuprum',sans-serif;
-	text-shadow: none;
+    font: 14px 'Cuprum',sans-serif;
+    text-shadow: none;
 }
+.no-margin { margin: 0 !important; }
 .myjournal a{
-	text-decoration: none;
+    text-decoration: none;
 }
 .myjournal .vertical-tabs-panel{
-	border: 1px solid #E0E0E0;
+    border: 1px solid #E0E0E0;
 }
 .myjournal .vertical-tabs-body {
     padding: 20px 25px;
 }
+
+/* misc */
+.myjournal .with-tbar{ margin-top: 1px; }
+.myjournal .main-tbar .x-toolbar{
+    background-color: #F7F7F7;
+    border-bottom-color: #E7E7E7;
+    border-top: 1px solid #E7E7E7; 
+    margin-top: 15px;
+    padding: 15px;
+}
+
+/* Template Variable */
 .myjournal #modx-tv-tabs {
     width: auto !important;
 }
 .myjournal .vertical-tabs-panel .radios-and-checkboxes .desc-under{
-	font: italic 11px Arial,Helvetica,sans-serif;
+    font: italic 11px Arial,Helvetica,sans-serif;
     margin: 1px 0 0;
     position: absolute;
 }
 .myjournal .vertical-tabs-panel .radios-and-checkboxes { margin-bottom: 8px; }
 .myjournal .vertical-tabs-panel .radios-and-checkboxes .x-form-item,
 .myjournal .vertical-tabs-panel .radios-and-checkboxes .x-hide-label{ 
-	margin-bottom: 0; 
-	padding-bottom: 0; 
+    margin-bottom: 0; 
+    padding-bottom: 0; 
 }
 .myjournal .vertical-tabs-panel .radios-and-checkboxes .with-desc { margin-top: 16px; }
+.myjournal .tag-list-panel{ margin: -14px 0 16px; }
+.myjournal .taglist li{
+    float: left;
+    padding: 2px;
+}
+.myjournal .taglist button{
+    border: 1px solid #D5D5D5;
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    color: #777777;
+    margin-right: 3px;
+    padding: 3px 6px;
+    font: 13px 'Cuprum',sans-serif;
+    cursor: pointer;
+}
+.myjournal .taglist li.checked button{
+    background-color: #9FCB57;
+    border: 1px solid #85A948;
+    color: #556F14;
+}
+.myjournal .taglist li.checked.new-item button{
+    background-color: #FEBB4A;
+    border-color: #F5B74E #E7A93F #DFA138;
+    color: #996633;
+}
+.ext-strict  .myjournal .x-superboxselect { 
+    padding: 3px 3px 6px !important;
+}
+.myjournal .x-superboxselect-input input { background-color: transparent; }
+.myjournal .x-superboxselect li {}
+.myjournal .x-superboxselect-item {
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    background-color: #DEE7F8;
+    border: 1px solid #CAD8F3;
+    color: #777777;
+    cursor: pointer;
+    font: 13px/1 'Cuprum',sans-serif;
+    margin-right: 2px;
+    padding: 4px 20px 4px 10px !important;
+}
+.myjournal .x-superboxselect-item-hover {}
 
 /* MAY HAVE TO MOVE THIS ON MAIN THEME DEF - Main column */
 .myjournal .x-column {
-	margin: 0 20px 0 0;
+    margin: 0 20px 0 0;
 }
 
 .myjournal .aside {
@@ -41,10 +98,10 @@
 }
 .myjournal .aside-block-wrapper {
     border-top: 1px solid #FFFFFF;
-	border-bottom: 1px solid #E0E0E0;
-	color: #666666;
+    border-bottom: 1px solid #E0E0E0;
+    color: #666666;
     margin-left: 1px;
-    padding: 15px;	
+    padding: 15px;    
 }
 .myjournal .aside-block-wrapper.darker {
     background-color: #F3F3F3;
@@ -52,10 +109,10 @@
 .myjournal .aside-block-wrapper:last-child { border-bottom: 0 none; }
 
 .myjournal  .box-title {
-	color: #444444;
+    color: #444444;
     font: 16px 'Cuprum',sans-serif;
     text-shadow: 0 1px 0 #FFFFFF;
-	margin-bottom:12px;
+    margin-bottom:12px;
 }
 
 .myjournal  .x-grid3-col-date {
@@ -81,7 +138,7 @@
     line-height: 1;
     padding-right: 10px;
     text-align: right;
-	white-space: normal;
+    white-space: normal;
 }
 
 .myjournal .day_month .hour {
@@ -96,11 +153,11 @@
 
 /* TPLs */
 .myjournal .empty-category-message{
-	font-size: 13px;
-	color: #C34550;
+    font-size: 13px;
+    color: #C34550;
 }
 .myjournal button.inline-btn{
-	background-color: transparent;
+    background-color: transparent;
     border: 0 none;
     color: #225985;
     font: 12px Helvetica,Tahoma,Arial,Helvetica,sans-serif;
@@ -112,13 +169,146 @@
 
 /* buttons */
 .myjournal .save-btns .x-toolbar-left table:first-child{
-	margin: 0 auto;
+    margin: 0 auto;
 }
 .myjournal .save-btns .x-toolbar {
-	background-color: transparent;
-	border-style: none solid;
+    background-color: transparent;
+    border-style: none solid;
     border-width: 0 1px;
     border-color: transparent #D5D5D5;
     margin: 0;
     padding: 12px 20px 14px;
+}
+
+/* Refactor MODx Browser */
+.myjournal-window-browser {}
+.myjournal-window-browser .thumb-wrapper .thumb,
+.myjournal-window-browser .thumb-wrapper {
+    width: 92px;
+}
+.myjournal-window-browser .thumb-wrapper .thumb{
+    height: 66px;
+    padding-top: 5px;
+}
+.myjournal-window-browser .thumb-wrapper .thumb img{
+    height: 60px;
+}
+.myjournal-window-browser .thumb-wrapper .name{
+    font-size: 11px;
+    font-weight: normal;
+    padding: 0 5px;
+}
+.myjournal-window-browser .thumb-wrapper .thumb img{
+    width: 80px;
+}
+.myjournal-window-browser .thumb-wrapper .thumb .no-preview{
+    color: #C0C0C0;
+    font-weight: bold;
+    padding: 15px 5px 5px;
+}
+.myjournal-window-browser .description {
+    background-color: #F3F3F3;
+    border-bottom: 1px solid #E0E0E0;
+    border-top: 1px solid #FFFFFF;
+    color: #666666;
+    font-size: 10px;
+    line-height: 1.2;
+    margin-left: 1px;
+    padding: 15px;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+.myjournal-window-browser .aside-details {
+    background-color: #FDFDFD;
+    border-left: 1px solid #E0E0E0;
+    height: 450px;
+}
+.myjournal-window-browser .aside-details .selected {
+    border-bottom: 1px solid #E0E0E0;
+    color: #5B7A98;
+    padding: 15px;
+    text-align: center;
+}
+.myjournal-window-browser .aside-details .selected h5 {
+    color: #53595F;
+    font-size: 14px;
+    margin: 10px 0;
+    word-wrap: break-word;
+}
+.myjournal-window-browser .aside-details .selected img {
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
+    border: 1px solid #AAAAAA;
+    height: 80px;
+    width: 90px;
+}
+.myjournal-window-browser .description h4 {
+    font-size: 11px;
+    margin: 0 0 10px;
+    text-shadow: 0 1px 0 #FFFFFF;
+    text-transform: uppercase;
+}
+.myjournal-window-browser .description ul li {
+    font-size: 10px;
+}
+.myjournal-window-browser .description ul li .infoname {
+    color: #AAAAAA;
+    font-weight: bold;
+    width: 50%;
+}
+.myjournal-window-browser .description ul li .infovalue {
+    max-width: 50%;
+    padding: 0 8px;
+    word-wrap: break-word;
+}
+.myjournal-window-browser .browser-tree .x-tree-root-ct{
+    background-color: #FFFFFF;
+    border-top: 1px solid #E0E0E0;
+    height: 350px;
+    overflow: auto;
+    padding: 10px 10px 0;
+}
+.myjournal-window-browser .browser-tree {
+    border-right: 1px solid #E0E0E0;
+    height: 450px;
+    padding: 0;
+    margin: 0;
+}
+.myjournal-window-browser .browser-tree .browser-tree-tbar {
+    padding: 4px 0 8px 8px;
+}
+.myjournal-window-browser .browser-tree .modx-leftbar-second-tb{
+    padding: 3px 0 0;
+}
+.myjournal-window-browser .browser-tree .x-toolbar-layout-ct {
+}
+.myjournal-window-browser .browser-tree .x-toolbar-layout-ct.modx-formpanel {
+}
+.myjournal-window-browser .browser-view-and-details{
+    height: 450px;
+}
+.myjournal-window-browser .browser-main-view{
+    height: 450px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+.myjournal-window-browser .browser-main-view .x-panel-body{
+    height: 392px;
+    overflow: auto;
+    padding: 10px 0 0 10px;
+}
+.myjournal-window-browser .browser-main-view .boxed-toolbar .x-toolbar{
+    background-color: #F5F5F5;
+    border-bottom: 1px solid #DEDEDE;
+    padding: 10px;
+}
+.browser-main-view .empty-msg {
+    color: gray;
+    font: 11px tahoma,arial,helvetica,sans-serif;
+    padding: 30px 0;
+    text-align: center;
+}
+.browser-main-view .loading-indicator { 
+    background-position: center 85px;
 }
