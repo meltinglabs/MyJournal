@@ -37,6 +37,7 @@ class ArticlesGetListProcessor extends modObjectGetListProcessor {
      */
     public function prepareRow(xPDOObject $object) {
         $resourceArray = parent::prepareRow($object);
+        $resourceArray['preview_url'] = $this->getPreviewUrl($resourceArray['id'], $resourceArray['context_key']);
         return $resourceArray;
     }
     
@@ -60,6 +61,15 @@ class ArticlesGetListProcessor extends modObjectGetListProcessor {
             'createdby_username' => 'CreatedBy.username',
         ));
         return $c;
+    }
+    
+    /**
+     * Get url for resource for preview window
+     * @return string
+     */
+    public function getPreviewUrl($id, $ctx) {
+        $this->previewUrl = $this->modx->makeUrl($id, $ctx, '', 'full');
+        return $this->previewUrl;
     }
 }
 return 'ArticlesGetListProcessor';
