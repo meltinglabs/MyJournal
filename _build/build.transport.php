@@ -15,10 +15,10 @@ set_time_limit(0);
 define('PKG_NAME','myJournal');
 define('PKG_NAMESPACE','myjournal');
 define('PKG_VERSION','1.0.0');
-define('PKG_RELEASE','beta2');
+define('PKG_RELEASE','beta3');
 
 function getSnippetContent($path, $name, $debug = false) {
-	$filename = $path . $name .'.php';
+    $filename = $path . $name .'.php';
     $o = file_get_contents($filename);
     $o = str_replace('<?php','',$o);
     $o = str_replace('?>','',$o);
@@ -32,13 +32,13 @@ $sources= array (
     'root' => $root,
     'files' => $root .'files/',
     'build' => $root .'_build/',
-	'data' => $root .'_build/data/',
+    'data' => $root .'_build/data/',
     'resolvers' => $root . '_build/resolvers/',
     'core' => $root.'core/components/'.PKG_NAMESPACE,
     'snippets' => $root.'core/components/'.PKG_NAMESPACE.'/elements/snippets/',
-	'plugins' => $root.'core/components/'.PKG_NAMESPACE.'/elements/plugins/',
+    'plugins' => $root.'core/components/'.PKG_NAMESPACE.'/elements/plugins/',
     'assets' => $root.'assets/components/'.PKG_NAMESPACE,
-	'lexicon' => $root . 'core/components/'.PKG_NAMESPACE.'/lexicon/',
+    'lexicon' => $root . 'core/components/'.PKG_NAMESPACE.'/lexicon/',
     'docs' => $root.'core/components/'.PKG_NAMESPACE.'/docs/',
     'model' => $root.'core/components/'.PKG_NAMESPACE.'/model/',
 );
