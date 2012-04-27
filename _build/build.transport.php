@@ -61,20 +61,20 @@ $modx->getService('lexicon','modLexicon');
 $modx->lexicon->load('myjournal:default,mgr');
 
 /* load system settings */
-// $modx->log(modX::LOG_LEVEL_INFO,'Packaging in System Settings...');
-// $settings = include $sources['data'].'transport.settings.php';
-// if (empty($settings)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in settings.');
-// $attributes= array(
-    // xPDOTransport::UNIQUE_KEY => 'key',
-    // xPDOTransport::PRESERVE_KEYS => true,
-    // xPDOTransport::UPDATE_OBJECT => false,
-// );
-// foreach ($settings as $setting) {
-    // $vehicle = $builder->createVehicle($setting,$attributes);
-    // $builder->putVehicle($vehicle);
-// }
-// $modx->log(modX::LOG_LEVEL_INFO,'<strong>Packaged in '.count($settings).' system settings.</strong>'); flush();
-// unset($settings,$setting,$attributes);
+$modx->log(modX::LOG_LEVEL_INFO,'Packaging in System Settings...');
+$settings = include $sources['data'].'transport.settings.php';
+if (empty($settings)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in settings.');
+$attributes= array(
+    xPDOTransport::UNIQUE_KEY => 'key',
+    xPDOTransport::PRESERVE_KEYS => true,
+    xPDOTransport::UPDATE_OBJECT => false,
+);
+foreach ($settings as $setting) {
+    $vehicle = $builder->createVehicle($setting,$attributes);
+    $builder->putVehicle($vehicle);
+}
+$modx->log(modX::LOG_LEVEL_INFO,'<strong>Packaged in '.count($settings).' system settings.</strong>'); flush();
+unset($settings,$setting,$attributes);
 
 /* create category */
 $category= $modx->newObject('modCategory');
@@ -134,19 +134,55 @@ $vehicle->resolve('php',array(
     'source' => $sources['resolvers'] . 'resolve.extensionpackages.php',
 ));
 
+$vehicle->resolve('php',array(
+    'source' => $sources['resolvers'] . 'resolve.tables.php',
+));
+
 $modx->log(modX::LOG_LEVEL_INFO,'Packaged in resolvers.'); flush();
 $builder->putVehicle($vehicle);
 
-/* add tv plugin */
+/* add mgr css plugin */
 $modx->log(modX::LOG_LEVEL_INFO,'Adding in TV Plugin...');
 $plugin= $modx->newObject('modPlugin');
 $plugin->fromArray(array(
     'id' => 1,
     'name' => 'MyJournal Manager CSS',
     'description' => 'Load the basic css styles used in the manager but not forcefully when using MyJournal (icon)',
-    'plugincode' => getSnippetContent($sources['plugins'], 'plugin.myjournal'),
+    'plugincode' => getSnippetContent($sources['plugins'], 'plugin.mgrcss'),
 ),'',true,true);
 $events = include $sources['data'].'events/events.mgrcss.php';
+if (is_array($events) && !empty($events)) {
+    $modx->log(modX::LOG_LEVEL_INFO,'<strong>Added '.count($events).' event(s) to MyJournal.</strong>');
+    $plugin->addMany($events);
+}
+unset($events);
+$attributes = array (
+    xPDOTransport::PRESERVE_KEYS => false,
+    xPDOTransport::UPDATE_OBJECT => true,
+    xPDOTransport::UNIQUE_KEY => 'name',
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+        'PluginEvents' => array(
+            xPDOTransport::PRESERVE_KEYS => true,
+            xPDOTransport::UPDATE_OBJECT => false,
+            xPDOTransport::UNIQUE_KEY => array('pluginid','event'),
+        ),
+    ),
+);
+$vehicle = $builder->createVehicle($plugin, $attributes);
+$builder->putVehicle($vehicle);
+unset($vehicle,$attributes,$plugin);
+
+/* add layout placehoders plugin */
+$modx->log(modX::LOG_LEVEL_INFO,'Adding in Layout Placeholders Plugin...');
+$plugin= $modx->newObject('modPlugin');
+$plugin->fromArray(array(
+    'id' => 1,
+    'name' => 'Layout Placeholders',
+    'description' => 'Load the basic css styles used in the manager but not forcefully when using MyJournal (icon)',
+    'plugincode' => getSnippetContent($sources['plugins'], 'plugin.layoutplaceholders'),
+),'',true,true);
+$events = include $sources['data'].'events/events.layoutplaceholders.php';
 if (is_array($events) && !empty($events)) {
     $modx->log(modX::LOG_LEVEL_INFO,'<strong>Added '.count($events).' event(s) to MyJournal.</strong>');
     $plugin->addMany($events);

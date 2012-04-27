@@ -69,7 +69,7 @@ $generator->mapHeader= <<<EOD
  */
 EOD;
 
-$generator->parseSchema($sources['schema'].'myjournal.mysql.schema.xml', $sources['model']);
+$generator->parseSchema($sources['schema'].'taxonomy.mysql.schema.xml', $sources['model']);
 
 $mtime= microtime();
 $mtime= explode(" ", $mtime);
