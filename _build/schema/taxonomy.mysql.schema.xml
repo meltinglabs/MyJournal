@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="taxonomy" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+    <object class="TermRelationships" table="term_relationships" extends="xPDOObject">
+        <field key="owner_id"  dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+        <field key="term_id"  dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+        <field key="rank" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+
+        <index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+            <column key="owner_id" length="" collation="A" null="false" />
+            <column key="term_id" length="" collation="A" null="false" />
+        </index>
+        
+        <aggregate alias="Term" class="Terms" key="id" local="term_id" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Taxonomy" class="TermTaxonomy" key="id" local="owner_id" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+    <object class="TermTaxonomy" table="term_taxonomy" extends="xPDOSimpleObject">
+        <field key="term_id" dbtype="bigint" precision="20" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+        <field key="type" dbtype="varchar" precision="32" phptype="string" null="false" default="" index="index" />
+        <field key="description" dbtype="longtext" phptype="string" null="false" />
+        <field key="parent" dbtype="bigint" precision="20" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="count" dbtype="bigint" precision="20" phptype="integer" null="false" default="0" />
+
+        <index alias="term_id" name="term_id" primary="false" unique="false" type="BTREE" >
+            <column key="term_id" length="" collation="A" null="false" />
+        </index>
+        <index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+            <column key="type" length="" collation="A" null="false" />
+        </index>
+        
+        <aggregate alias="Term" class="Terms" key="id" local="term_id" foreign="id" cardinality="one" owner="foreign" />
+        <composite alias="Relationships" class="TermRelationships" local="term_id" foreign="term_id" cardinality="many" owner="local" />        
+    </object>
+    <object class="Terms" table="terms" extends="xPDOSimpleObject">
+        <field key="value" dbtype="varchar" precision="200" phptype="string" null="false" default="" index="index" />
+        <field key="alias" dbtype="varchar" precision="200" phptype="string" null="false" default="" index="unique" />
+        
+        <index alias="value" name="value" primary="false" unique="false" type="BTREE" >
+            <column key="value" length="" collation="A" null="false" />
+        </index>
+        <index alias="alias" name="alias" primary="false" unique="true" type="BTREE" >
+            <column key="alias" length="" collation="A" null="false" />
+        </index>
+        
+        <composite alias="Attached" class="TermRelationships" local="id" foreign="term_id" cardinality="many" owner="local" />
+        <composite alias="TermTaxonomy" class="TermTaxonomy" local="id" foreign="term_id" cardinality="one" owner="local" />
+    </object>
+</model>
