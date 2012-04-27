@@ -1,6 +1,6 @@
 <?php
 /**
- * Events for ClicheThumbnail plugin
+ * Events for the manager
  *
  * @package myjournal
  * @subpackage build

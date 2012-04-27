@@ -1,6 +1,6 @@
 <?php
 /**
-* Add myJournal Custom Resource Type to Extension Packages
+* Add MyJournal Custom Resource Type to Extension Packages
 *
 * @var xPDOObject $object
 * @var array $options
