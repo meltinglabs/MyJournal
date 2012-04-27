@@ -44,6 +44,16 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
         this._addSidebarDocumentFields();
         this._addSidebarSettingsFields();
         this.doLayout();
+        
+        if(MyJournal.record.resourceGroups.length > 0){
+            this.asideDarker = Ext.getCmp('aside-darker'),
+            this.asideDarker.add({
+                 xtype: 'myjournal-field-checkboxgroup'
+                ,fieldLabel: 'Access & Privacy'
+                ,data: MyJournal.record.resourceGroups
+            });           
+        }
+        this.doLayout();
     }
     
     ,_addResourceFields: function(){
@@ -148,20 +158,9 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
                 ,forId: 'modx-resource-menutitle'
                 ,html: _('resource_menutitle_help')
                 ,cls: 'desc-under'
-                ,hidden: true
+                ,hidden: true            
             },{
-                xtype: 'xcheckbox'
-                ,boxLabel: _('resource_hide_from_menus')
-                ,description: '<b>[[*hidemenu]]</b><br />'+_('resource_hide_from_menus_help')
-                ,hideLabel: true
-                ,name: 'hidemenu'
-                ,id: 'modx-resource-hidemenu'
-                ,inputValue: 1
-                // ,checked: parseInt(MyJournal.record.hidemenu) || true
-                ,checked: true
-                ,hidden: true
-            },{
-                fieldLabel: 'Article Status'
+                fieldLabel: 'Container Status'
                 ,name: 'published'
                 ,id: 'modx-resource-published'                
                 ,xtype: 'combo'
@@ -181,6 +180,16 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
                 ,selectOnFocus:true
                 ,value: MyJournal.record.published
             },{
+                xtype: 'xcheckbox'
+                ,boxLabel: _('resource_hide_from_menus')
+                ,description: '<b>[[*hidemenu]]</b><br />'+_('resource_hide_from_menus_help')
+                ,hideLabel: true
+                ,name: 'hidemenu'
+                ,id: 'modx-resource-hidemenu'
+                ,inputValue: 1
+                // ,checked: parseInt(MyJournal.record.hidemenu) || true
+                // ,hidden: true
+            },{
                 xtype: 'textfield'
                 ,fieldLabel: _('resource_alias')
                 ,name: 'alias'
@@ -195,6 +204,19 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
                 ,html: _('myjournal.label_alias_desc') //We don't use the one supplied with the core - Eye FTW!
                 ,cls: 'desc-under'
                 // ,hidden: true
+            },{
+                xtype: 'modx-combo-template'
+                ,fieldLabel: _('resource_template')
+                ,description: '<b>[[*template]]</b><br />'+_('resource_template_help')
+                ,name: 'template'
+                ,id: 'modx-resource-template'
+                ,anchor: '100%'
+                ,editable: false
+                ,baseParams: {
+                    action: 'getList'
+                    ,combo: '1'
+                }
+                ,value: MyJournal.record.template || 0
             }]
         });
     }
@@ -202,6 +224,7 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
         Ext.getCmp('myjournal-container-sidebar').add({
             xtype: 'panel'    
             ,cls: 'aside-block-wrapper darker'
+            ,id: 'aside-darker'
             ,defaults: { anchor: '100%' }
             ,items:[{
                 xtype: 'modx-field-parent-change'
@@ -223,9 +246,10 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
                 ,hideLabel: true
                 ,name: 'cacheable'
                 ,id: 'modx-resource-cacheable'
-                ,hidden: true
+                // ,hidden: true
                 ,inputValue: 1
-                ,checked: parseInt(MyJournal.record.cacheable)
+                // ,checked: parseInt(MyJournal.record.cacheable)
+                ,checked: false
             },{
                  xtype: 'xcheckbox'
                 ,boxLabel: _('resource_searchable')
@@ -270,12 +294,6 @@ Ext.extend(MyJournal.ContainerPanelResource, MyJournal.Form.Abstract,{
                     afterrender: this.onCheckIfRTE
                     ,scope: this
                 }
-            },{
-                xtype: 'myjournal-field-checkboxgroup'
-                ,id: 'resourcegroups'
-                ,fieldLabel: 'Access & Privacy'
-                ,data: MyJournal.record.resourceGroups
-                ,hidden: MyJournal.record.resourceGroups.length == 0 ? true : false
             }]
         });
     }
