@@ -2,7 +2,7 @@
 /**
  * MyJournal
  *
- * Copyright 2011-12 by Shaun McCormick <shaun+myjournal@modx.com>
+ * Copyright 2012 by Stephane Boulard <lossendae@gmail.com>
  *
  * MyJournal is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -20,13 +20,20 @@
  * @package myjournal
  */
 /**
- * @var modX $modx
- * @var array $scriptProperties
+ * Total comments snippet helper that wrap QuipCount and provide default implementation for thread
  */
-switch ($modx->event->name) {
-    case 'OnManagerPageInit':
-        $cssFile = $modx->getOption('myjournal.assets_url',null,$modx->getOption('assets_url').'components/myjournal/').'css/mgr.css';
-        $modx->regClientCSS($cssFile);
-        break;
+$options = array();
+$id = $modx->getOption('id', $scriptProperties, null);
+$commentSnippet = $modx->getOption('snippet', $scriptProperties, 'QuipCount');
+if(!empty($id)) {
+    /** @var modSnippet $snippet */
+    $snippet = $modx->getObject('modSnippet', array('name' => $commentSnippet));
+    if ($snippet) {
+        $snippet->setCacheable(false);
+        $output = $snippet->process(array(
+            'thread' => "myarticle-{$id}",
+        ));
+        return $output;
+    }
 }
-return;
+return '';
