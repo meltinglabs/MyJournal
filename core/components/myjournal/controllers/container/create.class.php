@@ -1,10 +1,32 @@
 <?php
+/**
+ * MyJournal
+ *
+ * Copyright 2012 by Stephane Boulard <lossendae@gmail.com>
+ *
+ * MyJournal is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * MyJournal is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * MyJournal; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ * @package myjournal
+ */
 require_once $modx->getOption('manager_path',null,MODX_MANAGER_PATH).'controllers/default/resource/create.class.php';
 /**
  * @package myjournal
  */
 class MyJournalCreateManagerController extends ResourceCreateManagerController {
-
+    /** @var MyJournal $resource */
+    public $resource;
+    
     public function loadCustomCssJs() {
         $managerUrl = $this->context->getOption('manager_url', MODX_MANAGER_URL, $this->modx->_userConfig);
         $myjournalAssetsUrl = $this->modx->getOption('myjournal.assets_url',null,$this->modx->getOption('assets_url',null,MODX_ASSETS_URL).'components/myjournal/');
@@ -31,7 +53,7 @@ class MyJournalCreateManagerController extends ResourceCreateManagerController {
         return array('resource','myjournal:default');
     }
     
-     /**
+    /**
      * Return the pagetitle
      *
      * @return string
@@ -43,15 +65,19 @@ class MyJournalCreateManagerController extends ResourceCreateManagerController {
     
     /**
      * Load the TVs for the Resource
+     * Overrides default implementation because we don't set any TV during creation of a new journal container
      *
      * @param array $reloadData resource data passed if reloading
      * @return string The TV editing form
      */
     public function loadTVs($reloadData = array()) {
-        /* We override all the implementation here because we don't set any TV during creation of a new journal container */
         return '';
     }
     
+    /**
+     * Override the default implementation to use checkboxes instead of a grid store
+     * @return mixed|array The resource group list ready to used in the manager as checkboxes
+     */
     public function getResourceGroups() {
         $parentGroups = array();
         if ($this->resource->get('id') == 0) {
@@ -81,7 +107,6 @@ class MyJournalCreateManagerController extends ResourceCreateManagerController {
                 'checked' => $access,
                 'name' => 'resource_groups[]',
             );
-
             $this->resourceArray['resourceGroups'][] = $resourceGroupArray;
         }
         return $this->resourceArray['resourceGroups'];

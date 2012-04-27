@@ -1,12 +1,31 @@
 <?php
 /**
- * @var modX $modx
+ * MyJournal
+ *
+ * Copyright 2012 by Stephane Boulard <lossendae@gmail.com>
+ *
+ * MyJournal is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * MyJournal is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * MyJournal; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ * @package myjournal
  */
 require_once $modx->getOption('manager_path',null,MODX_MANAGER_PATH).'controllers/default/resource/update.class.php';
 /**
  * @package myjournal
  */
 class MyArticleUpdateManagerController extends ResourceUpdateManagerController {
+    /** @var MyArticle $resource */
+    public $resource;
     public $tvElements = array();
 
     public function loadCustomCssJs() {
@@ -30,6 +49,34 @@ class MyArticleUpdateManagerController extends ResourceUpdateManagerController {
         $this->addJavascript($myjournalAssetsUrl . 'mgr/article/update/panel.js');  
         $this->addJavascript($myjournalAssetsUrl . 'mgr/article/update/resource.js');  
         
+        $tags = array();
+        $list = array();
+        $idx = 0;
+        $this->resource->loadTaxonomy();
+        $allTags = $this->resource->getTags(true);
+        $assignedTags = $this->resource->getTags();
+        foreach($allTags as $key => $value){      
+            $row = array(
+                'value' => $key,
+                'idx' => $idx,
+                'checked' => false,
+            );
+            if(array_key_exists($key, $assignedTags)){
+                $tags[] = $key;
+                $row['checked'] = true;
+            } 
+            $list[] = $row; 
+            $idx++;
+        }
+        $panel = array(
+            'field_id' => 'taxonomy_tags',
+            'field_name' => 'taxonomy[tags]',
+            'field_label' => 'Tags',
+            'field_value' => implode(',', $tags),
+            'list' => $list,
+            'field_description' => 'This is a tag panel',
+        );
+        
         $this->addHtml('<script type="text/javascript"> 
         Ext.onReady(function() {            
             MyJournal.assets_url = "'.$myjournalAssetsUrl.'";
@@ -37,7 +84,8 @@ class MyArticleUpdateManagerController extends ResourceUpdateManagerController {
             MyJournal.resource_id = '.$this->resource->get('id').';
             MyJournal.preview_url = "'.$this->previewUrl.'";
             MyJournal.record = '.$this->modx->toJSON($this->resourceArray).';
-            MyJournal.tvs = '.$this->modx->toJSON($this->tvElements).';
+            // MyJournal.tvs = '.$this->modx->toJSON($this->tvElements).';
+            MyJournal.tags = '.$this->modx->toJSON($panel).';
             MODx.ctx = "'.$this->resource->get('context_key').'";
             MODx.add("myjournal-main-panel");             
         });</script>');        
@@ -145,15 +193,19 @@ class MyArticleUpdateManagerController extends ResourceUpdateManagerController {
     
     /**
      * Load the TVs for the Resource
+     * Overrides default implementation because we don't set any TV during creation of a new journal container
      *
      * @param array $reloadData resource data passed if reloading
      * @return string The TV editing form
      */
     public function loadTVs($reloadData = array()) {
-        /* We override all the implementation here because we don't set any TV during creation of a new journal container */
         return '';
     }    
     
+    /**
+     * Override the default implementation to use checkboxes instead of a grid store
+     * @return mixed|array The resource group list ready to used in the manager as checkboxes
+     */
     public function getResourceGroups() {
         $parentGroups = array();
         if ($this->resource->get('id') == 0) {
