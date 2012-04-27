@@ -41,7 +41,7 @@
     padding-bottom: 0; 
 }
 .myjournal .vertical-tabs-panel .radios-and-checkboxes .with-desc { margin-top: 16px; }
-.myjournal .tag-list-panel{ margin: -14px 0 16px; }
+.myjournal .tag-list-panel{}
 .myjournal .taglist li{
     float: left;
     padding: 2px;
